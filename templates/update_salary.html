@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Update Salary</title>
+</head>
+<body>
+    <h1>Update Salary for {{ employee[1] }}</h1>
+    <form action="" method="post">
+        <label for="salary">New Salary:</label>
+        <input type="number" id="salary" name="salary" value="{{ employee[3] }}" required><br>
+        <input type="submit" vaavlue="Update Salary">
+    </form>
+    <p><a href="{{ url_for('index') }}">Back to Employee List</a></p>
+</body>
+</html>

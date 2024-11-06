@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Employee Management</title>
+</head>
+<body>
+    <h1>Employee List</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Salary</th>
+            <th>Actions</th>
+        </tr>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee[0] }}</td>
+            <td>{{ employee[1] }}</td>
+            <td>{{ employee[2] }}</td>
+            <td>${{ employee[3] }}</td>
+            <td><a href="{{ url_for('update_salary', id=employee[0]) }}">Update Salary</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Add New Employee</h2>
+    <form action="{{ url_for('add_employee') }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br>
+        
+        <label for="position">Position:</label>
+        <input type="text" id="position" name="position" required><br>
+        
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary" required><br>
+        
+        <input type="submit" value="Add Employee">
+    </form>
+</body>
+</html>
