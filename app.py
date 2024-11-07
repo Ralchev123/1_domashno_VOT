@@ -1,12 +1,42 @@
 from flask import Flask, render_template, request, redirect
 import psycopg2
+import os
+from dotenv import load_dotenv  
+import time
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Database connection
 def get_db_connection():
-    conn = psycopg2.connect(dbname="votdatabase", user="ralchev", password="nikola12!", host="localhost")
+    conn = psycopg2.connect(
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT")
+    )
     return conn
+
+def create_table_if_not_exists():
+    
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS employees (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(100),
+            position VARCHAR(100),
+            salary DECIMAL
+        )
+    """)
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+create_table_if_not_exists()
+time.sleep(2)
 
 @app.route('/')
 def index():
@@ -21,11 +51,11 @@ def index():
 @app.route('/add', methods=['POST'])
 def add_employee():
     if request.method == 'POST':
-        name = request.form['name']  # Corrected from request.fo
-        position = request.form['position']  # Corrected from request.fo
-        salary = request.form['salary']  # Corrected from request.fo
+        name = request.form['name']  
+        position = request.form['position'] 
+        salary = request.form['salary'] 
 
-        # Insert the data into the database
+        
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("INSERT INTO employees (name, position, salary) VALUES (%s, %s, %s)", (name, position, salary))
@@ -59,4 +89,4 @@ def update_salary(id):
     return render_template('update_salary.html', employee=employee)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
